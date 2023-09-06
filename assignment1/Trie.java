@@ -1,6 +1,6 @@
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-
+import java.util.List;
 
 /**
  * Trie uses the class node to build the <a href="https://en.wikipedia.org/wiki/Trie#">trie data structure</a>
@@ -84,36 +84,25 @@ public class Trie {
 
 
     /**
-     * Helper method findWordSubsequence(String subsequence). Searches for subsequences in the trie.
+     * Wrapper method to find a subsequence in the trie.
      *
-     * @param node        current node where the algorithm will search for
-     * @param subsequence value the algorithm searches for
-     * @param currentWord current word in the trie.
-     * @param lookup      memoization table to keep track which word the algorithm already found
+     * @param subsequence String word the algorithm searches for
      */
-    private void findWordSubsequence(TrieNode node, String subsequence, String currentWord, ArrayList<String> lookup) {
-        if (subsequence.isEmpty()) {
-            // If the subsequence is empty, print the current word and word is not in lookup table
-            if (node.isTerminal() && !lookup.contains(currentWord)) {
-                System.out.println(currentWord);
-                lookup.add(currentWord);
-            }
+    private void findWordSubsequenceDFS(TrieNode node, String currentPath, String subsequence, List<String> result) {
+        if (node == null) {
+            return;
         }
 
-        TrieNode[] children = node.getChildren();
+        // Check if the current path contains the subsequence and the node is a terminal node
+        if (currentPath.contains(subsequence) && node.isTerminal()) {
+            result.add(currentPath);
+        }
 
+        // Recursively explore the children
         for (int i = 0; i < 26; i++) {
-            if (children[i] != null) {
-                char ch = (char) ('a' + i);
-
-                // Check if the current child node's value matches the next character in the subsequence
-                if (subsequence.startsWith(String.valueOf(ch))) {
-                    // Recursively search for words with the remaining subsequence
-                    findWordSubsequence(children[i], subsequence.substring(1), currentWord + ch, lookup);
-                }
-
-                // Continue searching for words without consuming characters from the subsequence
-                findWordSubsequence(children[i], subsequence, currentWord + ch, lookup);
+            if (node.getChildren()[i] != null) {
+                char nextChar = (char) ('a' + i);
+                findWordSubsequenceDFS(node.getChildren()[i], currentPath + nextChar, subsequence, result);
             }
         }
     }
@@ -125,8 +114,11 @@ public class Trie {
      * @param subsequence String word the algorithm searches for
      */
     public void findWordSubsequence(String subsequence) {
-        ArrayList<String> lookup = new ArrayList<>();
-        findWordSubsequence(root, subsequence, "", lookup);
+        List<String> result = new ArrayList<>();
+        findWordSubsequenceDFS(root, "", subsequence, result);
+        for (String word : result) {
+            System.out.println(word);
+        }
     }
 
 
@@ -161,7 +153,7 @@ public class Trie {
     public static void main(String[] args) {
         Trie trie = new Trie();
 
-        String[] words = new String[]{"word", "work", "hardware", "warden", "shop", "computer", "compare"};
+        String[] words = new String[]{"batter", "work", "hardware", "warden", "shop", "computer", "compare"};
 
         for (String word : words) {
             trie.insertWord(word);
@@ -169,7 +161,7 @@ public class Trie {
 
         trie.printAllWords();
 
-        trie.findWordSubsequence("com");
+        trie.findWordSubsequence("ar");
 
         System.out.println(trie.findWord("work"));
         System.out.println(trie.findWord("container"));
