@@ -7,10 +7,10 @@ import java.util.ArrayList;
  */
 public class Trie {
 
-    private final Node root;
+    private final TrieNode root;
 
     public Trie() {
-        root = new Node();
+        root = new TrieNode();
     }
 
 
@@ -25,21 +25,21 @@ public class Trie {
             throw new InvalidParameterException();
         }
 
-        Node currentNode = root;
+        TrieNode currentTrieNode = root;
         StringBuilder value = new StringBuilder();
         for (char character : word.toCharArray()) {
             // If not present at index in children array, then create new node
-            if (currentNode.getChildren()[character - 'a'] == null) {
-                currentNode.getChildren()[character - 'a'] = new Node();
-                currentNode.setValue(value.toString());
+            if (currentTrieNode.getChildren()[character - 'a'] == null) {
+                currentTrieNode.getChildren()[character - 'a'] = new TrieNode();
+                currentTrieNode.setValue(value.toString());
             }
             // Set value and hop to next node
             value.append(character);
-            currentNode = currentNode.getChildren()[character - 'a'];
+            currentTrieNode = currentTrieNode.getChildren()[character - 'a'];
         }
         // Set value of node and mark node as terminal
-        currentNode.setTerminal(true);
-        currentNode.setValue(value.toString());
+        currentTrieNode.setTerminal(true);
+        currentTrieNode.setValue(value.toString());
     }
 
 
@@ -71,15 +71,15 @@ public class Trie {
      * @return true in case of success
      */
     public boolean findWord(String word) {
-        Node currentNode = root;
+        TrieNode currentTrieNode = root;
         for (char character : word.toCharArray()) {
             // If character at index in children array is null, then return false
-            currentNode = currentNode.getChildren()[character - 'a'];
-            if (currentNode == null) {
+            currentTrieNode = currentTrieNode.getChildren()[character - 'a'];
+            if (currentTrieNode == null) {
                 return false;
             }
         }
-        return currentNode.isTerminal();
+        return currentTrieNode.isTerminal();
     }
 
 
@@ -91,7 +91,7 @@ public class Trie {
      * @param currentWord current word in the trie.
      * @param lookup      memoization table to keep track which word the algorithm already found
      */
-    private void findWordSubsequence(Node node, String subsequence, String currentWord, ArrayList<String> lookup) {
+    private void findWordSubsequence(TrieNode node, String subsequence, String currentWord, ArrayList<String> lookup) {
         if (subsequence.isEmpty()) {
             // If the subsequence is empty, print the current word and word is not in lookup table
             if (node.isTerminal() && !lookup.contains(currentWord)) {
@@ -100,7 +100,7 @@ public class Trie {
             }
         }
 
-        Node[] children = node.getChildren();
+        TrieNode[] children = node.getChildren();
 
         for (int i = 0; i < 26; i++) {
             if (children[i] != null) {
@@ -133,15 +133,15 @@ public class Trie {
     /**
      * Helper method for printAllWords().
      *
-     * @param node   Current node in the algorithm
+     * @param trieNode   Current node in the algorithm
      * @param prefix concatenated string used while traversing the trie
      */
-    public void printAllWords(Node node, String prefix) {
-        if (node.isTerminal()) {
+    public void printAllWords(TrieNode trieNode, String prefix) {
+        if (trieNode.isTerminal()) {
             System.out.println(prefix);
         }
 
-        Node[] children = node.getChildren();
+        TrieNode[] children = trieNode.getChildren();
         for (int i = 0; i < 26; i++) {
             if (children[i] != null) {
                 char character = (char) ('a' + i);
