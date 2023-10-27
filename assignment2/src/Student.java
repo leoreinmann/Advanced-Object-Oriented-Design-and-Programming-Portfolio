@@ -36,6 +36,11 @@ public class Student {
         return gpa;
     }
 
+
+    public void accept(TreeNodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
     /**
      * Returns a string representation of the student, including first name, last name, RedID, and GPA.
      *

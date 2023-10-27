@@ -4,20 +4,6 @@ import java.util.function.Consumer;
  * Represents a node in the Binary Search Tree. Each node has a Student object and references to its left and right children.
  */
 public class BinarySearchTree {
-    private class TreeNode {
-        Student student;
-        TreeNode left;
-        TreeNode right;
-
-        /**
-         * Constructs a new TreeNode with the given student data.
-         *
-         * @param student The student data to be stored in this node.
-         */
-        TreeNode(Student student) {
-            this.student = student;
-        }
-    }
 
     private TreeNode root;
     private SortingStrategy strategy;
@@ -27,8 +13,14 @@ public class BinarySearchTree {
      *
      * @param strategy The strategy used for sorting and comparing students.
      */
-    public BinarySearchTree(SortingStrategy strategy) {
+    public BinarySearchTree(SortingStrategy strategy)
+    {
+        this.root = new TreeNode(new NullStudent());
         this.strategy = strategy;
+    }
+
+    public TreeNode getRoot() {
+        return root;
     }
 
     public SortingStrategy getStrategy() {
@@ -39,34 +31,24 @@ public class BinarySearchTree {
         this.strategy = strategy;
     }
 
-    /**
-     * Adds a student to the binary search tree. The position is determined by the sorting strategy.
-     *
-     * @param student The student object to add to the tree.
-     */
     public void add(Student student) {
-        root = addRecursive(root, student);
+        root = insert(root, student);
     }
 
-    /**
-     * Recursively adds a student to the binary search tree. The position is determined by the sorting strategy.
-     *
-     * @param current The current node to check.
-     * @param student The student object to add.
-     * @return The updated node after adding the student.
-     */
-    private TreeNode addRecursive(TreeNode current, Student student) {
-        if (current == null) {
+    private TreeNode insert(TreeNode current, Student student) {
+        if (current == null || current.isNull()) {
             return new TreeNode(student);
         }
 
         if (strategy.compare(student, current.student) < 0) {
-            current.left = addRecursive(current.left, student);
+            current.left = insert(current.left, student);
         } else if (strategy.compare(student, current.student) > 0) {
-            current.right = addRecursive(current.right, student);
+            current.right = insert(current.right, student);
         }
         return current;
     }
+
+
 
     /**
      * Iterates over the binary search tree in-order and applies the provided action to each student.
@@ -84,11 +66,10 @@ public class BinarySearchTree {
      * @param action A Consumer function that processes each student in the tree.
      */
     private void inOrderTraversal(TreeNode node, Consumer<Student> action) {
-        if (node != null) {
-            inOrderTraversal(node.left, action);
-            action.accept(node.student);
-            inOrderTraversal(node.right, action);
-        }
+        if (node == null || node.isNull()) return;
+        inOrderTraversal(node.left, action);
+        action.accept(node.student);
+        inOrderTraversal(node.right, action);
     }
 
 }
