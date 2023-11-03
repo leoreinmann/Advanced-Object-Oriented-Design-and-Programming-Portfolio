@@ -31,10 +31,25 @@ public class BinarySearchTree {
         this.strategy = strategy;
     }
 
+    /**
+     * Adds a new student to the binary search tree using the specified sorting strategy.
+     * This method initiates the insertion process starting from the root of the tree.
+     *
+     * @param student The student to be added to the tree.
+     */
     public void add(Student student) {
         root = insert(root, student);
     }
 
+    /**
+     * Recursively inserts a new student into the binary search tree in the correct position according to the sorting strategy.
+     * If the current node is null or represents a NullStudent, a new TreeNode with the student is returned.
+     * Otherwise, the method compares the student with the current node and decides to insert either to the left or right.
+     *
+     * @param current The current TreeNode being inspected or compared against.
+     * @param student The student to insert into the tree.
+     * @return The TreeNode after insertion, which may be a new node or the current node if no insertion occurs.
+     */
     private TreeNode insert(TreeNode current, Student student) {
         if (current == null || current.isNull()) {
             return new TreeNode(student);
@@ -72,7 +87,13 @@ public class BinarySearchTree {
         inOrderTraversal(node.right, action);
     }
 
-
+    /**
+     * Initiates a traversal of the binary search tree with the provided visitor. The visitor's methods are called
+     * for each node in the tree according to the Visitor pattern, allowing for various operations to be performed
+     * on the tree's nodes, such as calculations or modifications.
+     *
+     * @param visitor The TreeVisitor instance whose methods will be called on each node of the tree.
+     */
     public void traverseWithVisitor(TreeVisitor visitor) {
         if (root != null) {
             root.accept(visitor);  // Start the traversal from the root

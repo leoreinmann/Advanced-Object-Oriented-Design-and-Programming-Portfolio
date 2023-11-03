@@ -43,7 +43,8 @@ public class Student {
      * Returns a string representation of the student, including first name, last name, RedID, and GPA.
      *
      * @return A string representation of the student.
-     */    @Override
+     */
+    @Override
     public String toString() {
         return firstName + " " + lastName + " (ID: " + redId + ", GPA: " + gpa + ")";
     }

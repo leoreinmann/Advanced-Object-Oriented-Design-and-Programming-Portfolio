@@ -28,6 +28,15 @@ public class TreeNode {
         return right;
     }
 
+    /**
+     * Accepts a visitor that implements the TreeVisitor interface and applies the appropriate visitation method
+     * based on whether the current TreeNode contains a NullStudent or a regular Student.
+     * This method facilitates the Visitor pattern's ability to perform operations over the elements of a binary search tree.
+     * It ensures that the correct method is called for null and non-null nodes and recursively propagates the visitor
+     * down to the children nodes.
+     *
+     * @param visitor The visitor that is being accepted to perform operations on this node and its children.
+     */
     public void accept(TreeVisitor visitor) {
         if (this.student instanceof NullStudent) {
             visitor.visitNullNode(this);
