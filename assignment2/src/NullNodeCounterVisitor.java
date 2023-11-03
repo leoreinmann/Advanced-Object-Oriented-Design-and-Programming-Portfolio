@@ -1,17 +1,19 @@
-public class NullNodeCounterVisitor implements TreeNodeVisitor {
-    private int count = 0;
+public class NullNodeCounterVisitor implements TreeVisitor {
+    private int nullCount = 0;
 
     @Override
-    public void visit(Student student) {
-        // Do nothing
+    public void visitStudentNode(TreeNode node) {
+        // No action needed for non-null nodes
     }
 
     @Override
-    public void visit(NullStudent nullStudent) {
-        count++;
+    public void visitNullNode(TreeNode node) {
+        if (node.getStudent() instanceof NullStudent) {
+            nullCount++;
+        }
     }
 
-    public int getCount() {
-        return count;
+    public int getNullCount() {
+        return nullCount;
     }
 }

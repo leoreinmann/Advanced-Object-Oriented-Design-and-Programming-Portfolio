@@ -16,25 +16,31 @@ public class TreeNode {
         }
     }
 
-    public void accept(TreeNodeVisitor visitor) {
-        student.accept(visitor);  // This will require adding an accept() method to the Student and NullStudent classes
-        if (left != null && !left.isNull()) {
-            if(visitor instanceof PathLengthVisitor) {
-                ((PathLengthVisitor) visitor).increaseDepth();
-            }
-            left.accept(visitor);
-            if(visitor instanceof PathLengthVisitor) {
-                ((PathLengthVisitor) visitor).decreaseDepth();
-            }
+    public Student getStudent() {
+        return student;
+    }
+
+    public TreeNode getLeft() {
+        return left;
+    }
+
+    public TreeNode getRight() {
+        return right;
+    }
+
+    public void accept(TreeVisitor visitor) {
+        if (this.student instanceof NullStudent) {
+            visitor.visitNullNode(this);
+        } else {
+            visitor.visitStudentNode(this);
         }
-        if (right != null && !right.isNull()) {
-            if(visitor instanceof PathLengthVisitor) {
-                ((PathLengthVisitor) visitor).increaseDepth();
-            }
-            right.accept(visitor);
-            if(visitor instanceof PathLengthVisitor) {
-                ((PathLengthVisitor) visitor).decreaseDepth();
-            }
+
+        // No need to check for null because NullStudent represents a null node
+        if (this.left != null) {
+            this.left.accept(visitor);
+        }
+        if (this.right != null) {
+            this.right.accept(visitor);
         }
     }
 

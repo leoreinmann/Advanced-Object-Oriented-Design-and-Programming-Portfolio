@@ -72,4 +72,10 @@ public class BinarySearchTree {
         inOrderTraversal(node.right, action);
     }
 
+
+    public void traverseWithVisitor(TreeVisitor visitor) {
+        if (root != null) {
+            root.accept(visitor);  // Start the traversal from the root
+        }
+    }
 }
