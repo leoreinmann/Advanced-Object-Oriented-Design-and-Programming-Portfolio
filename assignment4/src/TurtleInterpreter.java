@@ -5,6 +5,8 @@ public class TurtleInterpreter {
     private Turtle turtle;
     private List<String> commandList = new ArrayList<>();
 
+    private Map<String, Point> points;
+
     public TurtleInterpreter(Turtle turtle) {
         this.turtle = turtle;
     }
@@ -64,26 +66,33 @@ public class TurtleInterpreter {
 
 
     private void handleVariableAssignment(String[] parts) {
-        String varName = parts[0].substring(1); // Variable name without the '#'
-        double value = parseValue(parts[2]); // Parse the value part
-        variables.put(varName, value);
+        String varName = parts[0].substring(1);
+        if (parts[2].contains(",")) { // Point definition
+            String[] pointParts = parts[2].split(",");
+            double x = Double.parseDouble(pointParts[0]);
+            double y = Double.parseDouble(pointParts[1]);
+            points.put(varName, new Point(x, y));
+        } else { // Numeric value
+            double value = parseValue(parts[2]);
+            variables.put(varName, value);
+        }
     }
+
 
 
     private double calculateSpecialFunction(String function) {
         String[] parts = function.split(" ");
-        String pointName = parts[1].substring(1); // Remove the '#'
-
-        double x = variables.getOrDefault(pointName + "_x", 0.0);
-        double y = variables.getOrDefault(pointName + "_y", 0.0);
+        String pointName = parts[1].substring(1);
+        Point point = points.get(pointName);
 
         if (function.startsWith("distanceTo")) {
-            return turtle.distanceTo(x, y);
+            return turtle.distanceTo(point.getX(), point.getY());
         } else if (function.startsWith("bearingTo")) {
-            return turtle.bearingTo(x, y);
+            return turtle.bearingTo(point.getX(), point.getY());
         }
         return 0;
     }
+
 
 
     private int handleRepeatCommand(String[] parts, int currentLine) throws Exception {
@@ -115,9 +124,4 @@ public class TurtleInterpreter {
         }
         return commandList.size(); // In case 'end' is not found
     }
-
-
-
-
-
 }
