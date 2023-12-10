@@ -5,7 +5,7 @@ public class TurtleInterpreter {
     private Turtle turtle;
     private List<String> commandList = new ArrayList<>();
 
-    private Map<String, Point> points;
+    private Map<String, Point> points = new HashMap<>();;
 
     public TurtleInterpreter(Turtle turtle) {
         this.turtle = turtle;
@@ -70,8 +70,11 @@ public class TurtleInterpreter {
         if (parts[2].contains(",")) { // Point definition
             String[] pointParts = parts[2].split(",");
             double x = Double.parseDouble(pointParts[0]);
-            double y = Double.parseDouble(pointParts[1]);
-            points.put(varName, new Point(x, y));
+            double y = Double.parseDouble(parts[3]);
+            points.put(varName.substring(1,2), new Point(x, y));
+        } else if (parts[2].contains("distanceTo") || parts[2].contains("bearingTo")) { // Handling special function
+            double value = parseValue(parts[2] + " " + parts[3]);
+            variables.put(varName, value);
         } else { // Numeric value
             double value = parseValue(parts[2]);
             variables.put(varName, value);
